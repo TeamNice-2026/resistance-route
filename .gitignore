@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+coverage/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.tsbuildinfo
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
