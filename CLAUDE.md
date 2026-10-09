@@ -1,11 +1,10 @@
 # Claude Code project instructions
 
-Read and follow `AGENTS.md`, `docs/development-workflow.md`, and `docs/architecture.md` before editing code.
+Read and follow `AGENTS.md`, `docs/development-workflow.md`, and `docs/architecture.md` before changing code.
 
-- `AGENTS.md` is the shared source of truth for all implementation agents.
-- Work only within the assigned Issue and feature branch.
-- If a design decision is unresolved or API/DB contracts must change, stop and ask first.
-- Run relevant tests; report changed files, results, remaining risks and PR URL.
-- Prepare a PR and request a non-author teammate's first review.
-- The project manager performs final approval and merge. **Never push directly to main or auto-merge.**
-- Never commit tokens, credentials, personal information or raw GPS tracking data.
+- `AGENTS.md` is the shared development contract.
+- Work only on the assigned Issue and feature branch; propose API/DB contract changes before editing.
+- Run relevant tests and report affected files, results, risks and the PR URL.
+- Create a PR for the project manager and ChatGPT to check; **teammate approvals are optional, not mandatory**.
+- **Never push directly to main or merge a PR.** Merging requires an explicit instruction from the project manager after review.
+- Never commit secrets, credentials, real personal information or raw GPS locations.

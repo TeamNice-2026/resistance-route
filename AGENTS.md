@@ -2,11 +2,12 @@
 
 ## 最優先の運用規約
 
-- **`docs/development-workflow.md` を必ず読む。** 設計相談 → 合意 → Issue確定 → featureブランチ → AI実装 → PR → **他メンバー一次レビュー** → **管理者の最終承認・マージ** の順を厳守する。
-- **`main` への直接push、自動マージは禁止。** 実装AIは作業ブランチへのコミットとPR作成まで。
-- GitHub Issueは実装時点の正式な仕様。曖昧な点や仕様変更はIssueへ戻して確認する。
-- Issueが着手可能になるまではコードを変更しない。PR作成・CI成功後に `status:review` にする。
-- 自分以外のメンバーによる一次レビューが必要。管理者以外がマージしてはいけない。
+- **`docs/development-workflow.md` を必ず読む。** 設計相談 → 仕様合意 → Issue → featureブランチ → 実装・テスト → PR → **ChatGPTと管理者による最終確認** → 管理者の許可を得てマージ、の順とする。
+- **他のメンバーによるPRレビュー・Approveは必須ではない。** 必要に応じて任意で依頼する。
+- **Codex / Claude Codeなどの実装エージェントは `main` への直接pushやマージを行わない。** PR作成で停止する。
+- ChatGPTがマージを実施できるのは、ユーザーが対象PRについて明示的に依頼し、差分・CI・仕様を確認して問題がない場合のみ。
+- GitHub Issueが正式な実装仕様。曖昧な点や変更はIssueで再確認する。
+- PRがReady for reviewでCI成功後に `status:review` を付与する。
 
 ## プロダクト仕様
 

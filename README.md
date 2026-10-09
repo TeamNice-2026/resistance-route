@@ -50,13 +50,13 @@ compose.yaml      ローカル開発スタック
 **正式な開発手順は [開発運用ルール](docs/development-workflow.md) を参照してください。**
 
 1. ChatGPT / Claudeとの設計相談で仕様・受入条件を確定する。
-2. GitHub Issueを作成・確認し、担当者と一次レビュアーを決める。
+2. GitHub Issueを作成・確認し、実装担当者を決める。
 3. [実装依頼テンプレート](docs/ai-implementation-prompt-template.md) を使ってCodex / Claude Codeへ実装指示を渡す。
 4. `feature/issue-番号-概要` ブランチで実装・テスト・コミットし、PRを作成する。
-5. **実装者以外のメンバーが一次レビューを行い、Approveする。**
-6. **プロジェクト管理者が最終承認して `main` へマージする。**
+5. **ChatGPTが差分・CI・仕様整合性を技術確認し、あなた（管理者）が最終判断する。**
+6. **管理者本人または管理者の明示的な指示を受けたChatGPTが `main` へマージする。**
 
-`main`への直接pushとAIによる自動マージは禁止です。CIが成功しても人間レビューを省略しません。管理者自身がPR作成者の場合、自己Approveはできないため、別メンバーのApprove後に管理者が確認してマージします。
+**他メンバーのPRレビュー・GitHub Approveは必須ではありません。** 必要な機能のみ任意で追加します。 `main`への直接pushおよびCodex / Claude Codeによる自動マージは禁止です。
 
 ## 開発段階
 
