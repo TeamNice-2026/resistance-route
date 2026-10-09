@@ -38,22 +38,25 @@ docker compose up --build
 frontend/         React + TypeScript + Vite
 backend/          FastAPI / Python
 database/         PostGIS 初期化・マイグレーション予定
-docs/             技術方針、Windowsセットアップ、仕様
+docs/             技術方針、開発フロー、Windowsセットアップ
 .github/          CI、Issue・PRテンプレート
 AGENTS.md         全開発者・AI支援ツール共通の規約
 CLAUDE.md         Claude Code 用の入口
 compose.yaml      ローカル開発スタック
 ```
 
-## 開発フロー
+## チーム開発の流れ（必読）
 
-1. GitHub Issueを作り、担当者と受け入れ条件を決める
-2. `feature/issue-番号-概要` ブランチを作成
-3. 変更に応じてテスト・ドキュメントを更新
-4. Pull Requestを作成し、他のメンバー1人以上のレビューを受ける
-5. CIが成功してから`main`へマージする（GitHubプラン上の保護設定が利用可能なら強制設定）
+**正式な開発手順は [開発運用ルール](docs/development-workflow.md) を参照してください。**
 
-**開発時の仕様変更はIssue・PRに記録してください。** `main` への直接pushは運用上禁止です。
+1. ChatGPT / Claudeとの設計相談で仕様・受入条件を確定する。
+2. GitHub Issueを作成・確認し、担当者と一次レビュアーを決める。
+3. [実装依頼テンプレート](docs/ai-implementation-prompt-template.md) を使ってCodex / Claude Codeへ実装指示を渡す。
+4. `feature/issue-番号-概要` ブランチで実装・テスト・コミットし、PRを作成する。
+5. **実装者以外のメンバーが一次レビューを行い、Approveする。**
+6. **プロジェクト管理者が最終承認して `main` へマージする。**
+
+`main`への直接pushとAIによる自動マージは禁止です。CIが成功しても人間レビューを省略しません。管理者自身がPR作成者の場合、自己Approveはできないため、別メンバーのApprove後に管理者が確認してマージします。
 
 ## 開発段階
 
