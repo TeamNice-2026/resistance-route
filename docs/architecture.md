@@ -1,38 +1,34 @@
-# Resistance Route — 設計方針
+# Resistance Route — システム設計の入口
 
-## プロダクト
-東京電子専門学校を中心に半径2km以内で利用する学生向け徒歩ナビWebアプリ。
-メインは「学校へ行く」。エリア内の自由な目的地検索も可能にする。
+東京電子専門学校の学生向け、池袋周辺半径2kmのGPS徒歩ナビWebアプリ。
 
-## 機能の順序
-1. 池袋の地図と現在地
-2. 学校または目的地への徒歩経路
-3. ログイン
-4. GPS実走記録と非公開履歴
-5. 自分の実走区間からのみおすすめ道投稿
-6. 「参考になった」と別ユーザーによるGPS通行確認
-7. 最短/コミュニティを反映した通学ルート比較
+## 参照すべき正式ドキュメント
 
-## アーキテクチャ
-Web: React / TypeScript / MapLibre (地図は後続Phaseで導入)
-API: Python / FastAPI
-DB: PostgreSQL / PostGIS
-ルート探索: 外部徒歩経路APIの候補を取得し、独自スコアで順位付けする。
-外部APIで任意の道路重みを使えると仮定しない。
+- [docs一覧](README.md)
+- [プロジェクト要件](project-requirements.md)
+- [機能仕様](functional-specification.md)
+- [GPS・ルート評価](gps-and-routing.md)
+- [画面仕様](screen-specification.md)
+- [技術設計](technical-design.md)
+- [確定・暫定・未決定事項](decision-log.md)
+- [開発運用](development-workflow.md)
 
-## セキュリティと制約
-- 利用者の生GPS履歴は非公開。公開投稿用LineStringを分離する。
-- 記録開始/終了を明示。バックグラウンド記録は対象外。
-- スマホの位置情報利用にはHTTPS・権限許可が必要。
-- 実走確認は道路の安全性・合法性を保証しない。
+## アーキテクチャの基本方針
 
-## Phase 0 の範囲
-Docker ComposeでReact・FastAPI・PostGISを起動できること、接続確認、
-基本の自動テスト・CI・ドキュメント。GPSや地図自体はまだ実装しない。
+- Web: React + TypeScript + Vite。地図にはMapLibre GL JSを予定。
+- API: Python + FastAPI。外部APIキーの保持、認証、投稿、GPS処理など。
+- DB: PostgreSQL + PostGIS。個人のGPS履歴と公開おすすめ道を分離。
+- ルート生成: 既存の徒歩ルートAPIを利用。候補へのコミュニティ評価を独自に実装。
+- 現在地: Geolocation API。GPS履歴の保存は明示的開始と画面表示中に限定。
 
-## Phase 1前の決定事項
-- 校舎の正確な位置・入口、半径2kmの判定基準
-- 地図タイル事業者の規約、表示義務、利用料
-- 徒歩ルートAPIの制約・代替経路の取得可否・月間上限
-- API契約・DBマイグレーション手段
+## 現在のステータス
 
+Phase 0の基本ソースコードとCIはGitHubにある。各メンバーのWindows PCでは未クローン・未起動。地図、GPS記録、認証、ルート検索、通行確認はまだ未実装。
+
+## 重要な禁止事項
+
+- 実装エージェントが未決定の仕様を勝手に確定しない。
+- 実際に存在しない経路やGPS検証結果を生成・表示しない。
+- 生GPS履歴を自動公開しない。
+- 「コミュニティ確認済み」を安全保証と表現しない。
+- 設計相談中の時点ではIssueを作成しない。実装依頼が確定した時にだけ登録する。
