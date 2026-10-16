@@ -4,10 +4,9 @@
 
 **TeamNice-2026 / 4人チーム / 2027年2月完成予定**
 
-## 最初に読む資料
+## 最初に読むもの
 
-**[docs/README.md](docs/README.md) から仕様を確認してください。**
-
+- [資料一覧](docs/README.md)
 - [要件定義](docs/project-requirements.md)
 - [機能仕様](docs/functional-specification.md)
 - [GPS・ルート評価](docs/gps-and-routing.md)
@@ -15,55 +14,62 @@
 - [技術構成](docs/technical-design.md)
 - [確定事項・未決定事項](docs/decision-log.md)
 - [開発フロー](docs/development-workflow.md)
-- [実装AI用プロンプト](docs/ai-implementation-prompt-template.md)
 
-## 現在の状況
+## Windows開発環境（Docker・WSL不使用）
 
-**Phase 0: GitHub上のソース土台とCIのみ準備済み。** 4人のPCではまだクローンしておらず、DockerでのWindowsローカル起動は未確認。地図・GPS・通学ナビの実装はこれから。
+学校PCは管理者権限が使えず、シャットダウンでDocker環境が消えるため、**Node.js 22とPython 3.12を直接使う**構成へ変更しました。
 
-## Windowsでの初期セットアップ
+ソースは学校のネットワークドライブ P:\卒業制作\resistance-route に置きます。Node/Pythonのインストールの可否・シャットダウン後の保持は未検証のため、各人で学校のポリシーに従って確認してください。
 
-必要なもの：Windows 10/11、Git for Windows、VS Code、Docker Desktop（WSL2 / Linuxコンテナ）。
+**詳しい手順は [Windowsセットアップ](docs/windows-setup.md) を参照してください。**
 
-PowerShellで実行：
+### Backend（ターミナルA / 初回）
 
 ~~~powershell
-git clone https://github.com/TeamNice-2026/resistance-route.git
-cd resistance-route
-Copy-Item .env.example .env
-docker compose up --build
+Set-Location 'P:\卒業制作\resistance-route'
+$venv = Join-Path $env:LOCALAPPDATA 'ResistanceRoute\venv'
+python -m venv $venv
+$python = Join-Path $venv 'Scripts\python.exe'
+& $python -m pip install -r 'backend\requirements-dev.txt'
+Set-Location 'P:\卒業制作\resistance-route\backend'
+& $python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ~~~
 
-動作確認：
+### Frontend（ターミナルB）
 
-- Web: http://localhost:5173
-- API: http://localhost:8000/api/health
-- DB: http://localhost:8000/api/health/db
-- OpenAPI: http://localhost:8000/docs
+~~~powershell
+Set-Location 'P:\卒業制作\resistance-route\frontend'
+npm install --no-audit --no-fund
+npm run dev
+~~~
 
-詳しくは [Windows手順](docs/windows-setup.md)。停止は docker compose down、DBデータを消す docker compose down -v は慎重に使う。
+- Web: http://127.0.0.1:5173
+- API: http://127.0.0.1:8000/api/health
+- API仕様: http://127.0.0.1:8000/docs
+- PostGIS: /api/health/db はDB未設定時に503を返す（現段階では想定どおり）
+
+PostgreSQL + PostGISは引き続き採用方針ですが、**学校PC外のDBを候補として検討する段階**であり、接続先は未決定です。GPS記録や投稿機能はまだ未実装です。
+
+以前のDocker Composeファイルは参考として残していますが、学校PCの標準手順では使用しません。
 
 ## ディレクトリ
 
-- frontend/：React、TypeScript、Vite
-- backend/：Python、FastAPI
-- database/：PostgreSQL、PostGISの初期化
-- docs/：仕様書、確定事項、開発運用ルール
-- .github/：CIとIssue・PRテンプレート
-- AGENTS.md：共通の実装ルール
-- CLAUDE.md：Claude Code向け指示
-- compose.yaml：ローカル開発環境
+- frontend/：React / TypeScript / Vite
+- backend/：Python / FastAPI
+- database/：PostGIS向けSQL
+- docs/：仕様書・セットアップ・開発フロー
+- .github/：GitHub ActionsとIssue/PRテンプレート
+- AGENTS.md / CLAUDE.md：実装AIのルール
 
-## AIを使った開発フロー
+## AIを利用した開発フロー
 
-1. **各自がChatGPT / Claudeで設計を相談・確定する。ここではIssueを作らない。**
-2. **Codex / Claude Codeに実装を引き渡すタイミングでIssueを作る。**
-3. Issue番号に沿った実装プロンプトを作り、featureブランチで実装・テストする。
-4. 実装AIはPushとPR作成まで。**mainへ直接Push・自動マージしない。**
-5. ChatGPTがPR差分・CI・仕様をレビューし、**管理者が最終判断**。明示的な許可があった場合のみマージする。
+1. ChatGPT / Claudeで仕様と受入条件を確定。設計中はIssueを作らない。
+2. Codex / Claude Codeへの実装引き渡し時にIssueを作る。
+3. featureブランチで実装・テスト・PushしてPRを作成する。
+4. ChatGPTが差分・CIを確認し、管理者が最終判断。無断マージ禁止。
 
-他メンバーのApproveは必須ではない。準備段階の資料整備やローカルクローンにはIssueは不要。正式な規則は [development-workflow.md](docs/development-workflow.md)。
+他メンバーのApproveは任意。ローカル環境準備にIssueは不要。
 
-## 注意
+## セキュリティ
 
-開発中はGitHubをPrivateにする方針だが、**リポジトリのPrivate化は管理者が確認する必要がある**。実GPS履歴、メールアドレス、トークン、APIキー、.envをコミット・Issue・PRへ記載しない。
+生GPS履歴、認証情報、DB接続情報をGit・Issue・PR・学校の共有ドライブに出力しない。リポジトリのPrivate化は別途管理者が設定・確認する。
