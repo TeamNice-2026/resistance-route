@@ -1,38 +1,51 @@
-# Resistance Route — 共通開発ルール
+# Resistance Route — 開発エージェント共通ルール
 
-## 最優先の運用規約
+## 最初に読むもの
 
-- **`docs/development-workflow.md` を必ず読む。** 設計相談 → 仕様合意 → Issue → featureブランチ → 実装・テスト → PR → **ChatGPTと管理者による最終確認** → 管理者の許可を得てマージ、の順とする。
-- **他のメンバーによるPRレビュー・Approveは必須ではない。** 必要に応じて任意で依頼する。
-- **Codex / Claude Codeなどの実装エージェントは `main` への直接pushやマージを行わない。** PR作成で停止する。
-- ChatGPTがマージを実施できるのは、ユーザーが対象PRについて明示的に依頼し、差分・CI・仕様を確認して問題がない場合のみ。
-- GitHub Issueが正式な実装仕様。曖昧な点や変更はIssueで再確認する。
-- PRがReady for reviewでCI成功後に `status:review` を付与する。
+- docs/README.md：資料の目次
+- docs/project-requirements.md：確定した要件とMVP
+- docs/decision-log.md：確定・暫定・未決定の区別
+- docs/development-workflow.md：Issue作成から最終マージまで
+- 変更内容に対応する docs/functional-specification.md / technical-design.md / gps-and-routing.md / screen-specification.md
 
-## プロダクト仕様
+## Issueの起票時期（厳守）
 
-- `docs/architecture.md` を読む。東京電子専門学校を中心に半径2 km、徒歩専用。
-- GPS記録は画面表示中のみ。おすすめ道は本人の実走履歴からのみ投稿する。
-- 生GPS履歴は非公開。公開するのはユーザーが指定した区間のみ。
-- 「コミュニティ確認済み」は道路の安全性を保証しない。
+- **ChatGPT / Claudeと仕様を相談している間はGitHub Issueを作成しない。**
+- 仕様・受入条件・担当が確定して、Codex / Claude Codeに実装を依頼する**その段階**でIssueを起票する。
+- 事前に全機能のIssueをまとめて作成しない。
+- 例外：ローカルクローンや資料整備などの準備作業は、管理者の依頼に従ってIssueなしで進めてよい。
 
-## 変更前
+## 実装・Git
 
-1. 対応Issue・受入条件、既存コード、テスト、関連設計を確認する。
-2. 担当外のファイルや大規模リファクタリングを無断で行わない。
-3. API/DB変更はチームと合意し、docsを更新する。
+- Issueがある作業は、対象Issueを最優先仕様とする。
+- 未決定事項を独断で確定せず、質問して確認する。
+- 最新mainからfeature/issue-番号-概要などの作業ブランチを作る。
+- **mainへの直接push禁止。実装AIによるPRのマージ禁止。**
+- 実装とテスト、PR作成まで行い、ChatGPT＋管理者の最終確認を待つ。
+- 他メンバーによるGitHub Approveは必須ではない。
+- ChatGPTがマージできるのは、対象PRの明示的な許可を管理者から受けて最終確認した場合のみ。
 
-## 品質と安全
+## プロダクトの固定要件
 
-- Frontend: TypeScript strict, React。Backend: Python型注釈 / FastAPI。
-- 例外を黙って握り潰さない。関連するテストを追加・実行する。
-- 動作確認していない機能を「完成」と報告しない。
-- `.env`、APIキー、トークン、パスワード、実GPS履歴をGit/Issue/PRに含めない。
-- CIが失敗したPRはマージしない。GPS関連は必要な実機テストも行う。
+- 学校を中心に半径2km・徒歩専用・学校へ行くボタン＋任意目的地。
+- GPS記録は明示的に開始し、画面表示中のみ。
+- おすすめ道投稿は本人のGPS実走履歴から選んだ区間のみ。
+- 生GPS履歴は非公開。公開投稿線は明示的に選択した区間のみ。
+- コミュニティ確認済みは安全保証ではない。
+- ルート形状は既存の徒歩ルートAPIを使用し、独自の道路ネットワークを一から作らない。
+- GPS閾値・配点・外部API選定などの暫定値を勝手に固定しない。
 
-## Phase 0 コマンド
+## 品質・秘密情報
 
-- `docker compose up --build`
-- `docker compose exec backend python -m pytest`
-- `docker compose exec frontend npm run typecheck`
-- `docker compose exec frontend npm run test`
+- Frontend: React / TypeScript strict。Backend: Python / FastAPI、DB: PostgreSQL/PostGIS。
+- API・DBの共有仕様は無断で破壊的変更をしない。
+- 対象外の広範なリファクタリングを行わない。関連テストを作成・実行する。
+- 実装していない機能や実機検証していない成果を完成と主張しない。
+- .env、APIキー、トークン、パスワード、メールアドレス、生GPSログをGit/PR/Issueへ出力しない。
+
+## Phase 0の基本コマンド
+
+- docker compose up --build
+- docker compose exec backend python -m pytest
+- docker compose exec frontend npm run typecheck
+- docker compose exec frontend npm run test
