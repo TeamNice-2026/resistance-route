@@ -84,4 +84,4 @@
 
 ## 8. 現時点の開発状況
 
-GitHub上にReact、FastAPI、PostgreSQL/PostGIS、Docker ComposeとCIの最小土台がある。**4人のWindows PCへのクローン・Docker起動確認はまだ行っていない。** 地図・GPS・ナビ本体は未実装。
+GitHubにはReact、FastAPI、PostgreSQL/PostGIS向け初期資材とCIがある。学校PCはDocker/WSLを使わずNode.jsとPythonで直接起動する方式へ変更中。**各端末での動作確認とPostGIS設置先の決定はまだ必要。** 地図・GPS・ナビ本体は未実装。

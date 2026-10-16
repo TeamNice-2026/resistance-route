@@ -30,7 +30,7 @@
 | D-01 | チーム | TeamNice-2026 / 4名 |
 | D-02 | GitHub | Organization: TeamNice-2026、Repository: resistance-route |
 | D-03 | リポジトリ構造 | frontend / backend / database / docs を含むMonorepo |
-| D-04 | 開発環境 | Windows・VS Code・Docker Compose |
+| D-04 | 開発環境 | Windows・VS Code・Node.js 22 + Python 3.12の直接実行（Docker・WSLなし） |
 | D-05 | 実装支援 | Claude Code / Codex |
 | D-06 | 仕様相談 | ChatGPT / Claudeで質問・検討を行う |
 | D-07 | **Issue作成時期** | **設計・受入条件が決まり、Codex / Claude Codeへ実装を渡すタイミングだけ** |
@@ -42,7 +42,7 @@
 | D-13 | 最終公開 | HTTPSでインターネット公開を目標 |
 | D-14 | 費用 | 必要なら少額の利用料を許容 |
 | D-15 | 完成予定 | 2027年2月ごろ |
-| D-16 | ローカル準備 | 4名とも未クローン。セットアップもAIへ依頼したい |
+| D-16 | ローカル準備 | 各メンバーで環境構築を進める。Node/Pythonの利用可否・永続性は未検証 |
 | D-17 | 初期Issue | 事前に作成したIssueは不要。今後は必要時に起票する |
 
 ## C. 現在の技術的土台（合意した採用案ではあるが機能は未実装）
@@ -50,11 +50,13 @@
 - React + TypeScript + Vite（現在のフロント構成）
 - Python + FastAPI（現在のバックエンド構成）
 - PostgreSQL + PostGIS（現在のDB構成）
-- Docker Compose（ローカル開発）
+- 学校PCではNode.js 22とPython 3.12で直接起動。旧Docker Compose資材は参考用に残存
 - GitHub Actions（CI）
 - MapLibre GL JS（地図表示用の採用方針。未組込）
 - Web Geolocation API（位置情報取得用の採用方針。未実装）
 - 徒歩ルート探索APIは事業者未決定
+- PostgreSQL + PostGISの配置先・接続方式は未決定（学校PCの外に置く案を比較）
+- 学校のPドライブはネットワーク共有。管理者権限なし。Docker環境はシャットダウン後に消えた
 
 ## D. 暫定設計（**合意済みの確定値ではない**）
 
@@ -76,6 +78,8 @@
 | 高 | 徒歩ルートAPI | 池袋の対応状況、経路候補数、経由点、規約、料金 |
 | 高 | GPS記録・端末挙動 | 閾値、精度、記録停止時の扱い、実機試験 |
 | 高 | 個人情報・公開区間 | 先頭末尾の位置秘匿、保持期限、削除時の依存処理 |
+| 高 | 学校PCの開発環境の持続性 | Node/Pythonの導入可否、学校PCの初期化範囲、Pドライブの実行制約 |
+| 高 | PostGIS開発用DBの設置先 | 外部DB候補、学内からの接続、権限、費用、秘密情報管理 |
 | 高 | 認証と本番セキュリティ | 認証方式、Cookie、CSRF、アカウント削除 |
 | 中 | データモデル・API仕様 | GeoJSON、時刻、権限、カラム、Migration |
 | 中 | 通行確認 | 重複許容距離、区間連続性、独立したユーザー確認数 |

@@ -8,21 +8,21 @@
 | --- | --- | --- |
 | フロントエンド | React + TypeScript + Vite | 最小画面・型チェック・テストを配置済み |
 | バックエンド | Python + FastAPI | APIヘルスチェックを配置済み |
-| DB | PostgreSQL + PostGIS | Docker初回起動時のPostGIS有効化SQLを配置済み |
-| 開発環境 | Docker Compose | コンテナ定義を配置済み |
+| DB | PostgreSQL + PostGIS | 初期化SQLのみ配置。学校PCにDBは未構築で、設置先も未選定 |
+| 開発環境 | Windows + Node.js 22 + Python 3.12（Docker・WSL不要） | 学校PCでの動作・シャットダウン後の保持は検証待ち |
 | CI | GitHub Actions | FrontendとBackendのテストを実行 |
 | 地図 | MapLibre GL JS | **採用方針。まだ組み込んでいない** |
 | 位置情報 | Geolocation API | **採用方針。まだ実装していない** |
 | 経路探索 | 既存徒歩ルートAPI | **事業者は未決定。未実装** |
 | Web公開 | HTTPS対応の構成 | **ホスティング事業者は未決定** |
 
-GitHub Actionsが成功していることと、4台のWindows上で起動確認したことは同じではない。**クローン・実機Docker確認は未実施**。
+GitHub Actionsの成功は、4台のWindows上での動作を保証しない。学校PCのDocker環境はシャットダウン後に消えたため、**Docker・WSLを使わずにWindowsで直接起動する方式へ変更**した。
 
 ## 2. システム構成
 
 - **ブラウザ:** 画面、地図、Geolocation API、ユーザー操作、現在地追従。
 - **バックエンドAPI:** 認証・権限、GPS記録データの取扱い、投稿・評価・通行確認、ルート取得・独自スコア、外部APIキーの管理。
-- **PostGIS:** ユーザーの非公開GPS点/線、公開おすすめ線、投稿タグ、評価、位置関係の空間検索。
+- **PostGIS:** ユーザーの非公開GPS点/線、公開おすすめ線、投稿タグ、評価、位置関係の空間検索。**DBのホストは未選定。** 学校外のDBも候補として比較する。
 - **外部地図タイルサービス:** MapLibreで表示する地図データを提供。利用規約、帰属表示、料金を確認して選ぶ。
 - **既存徒歩ルート探索API:** OSMなどの道路ネットワークを使って経路候補を生成。対応地域、候補の複数取得、料金と制限を検証する。
 
@@ -78,11 +78,11 @@ PostGISの空間インデックス（GiSTなど）を活用する方針。実際
 
 選定条件：スマホGPSが動作するHTTPS、FastAPIの実行、PostgreSQL/PostGIS、地図・ルートAPIキーの安全な保存、バックアップとデータ削除、無料枠/小額運用、共同管理可能な契約。
 
-**Docker Composeは現在のローカル開発用構成。** そのまま公開サーバーとして安全に運用できる保証はない。公開前に認証、秘密情報、DBアクセス制限、監視、データ保護を別途設計する。
+**学校PCではDockerとWSLを使わない。** 旧Docker Compose定義は互換性の参考として残っているが、標準手順では使用しない。公開前に認証、秘密情報、DBアクセス制限、監視、データ保護を別途設計する。
 
 ## 7. 実装・検証の切り分け
 
-Phase 0: React / FastAPI / PostGIS / CIの起動。  
+Phase 0: WindowsでReact・FastAPIを直接起動、CI確認、PostGIS設置先の選定。  
 Phase 1: MapLibre地図・GPS現在地・端末権限。  
 Phase 2: 徒歩ルートと学校行き・任意目的地。  
 Phase 3: 認証とアクセス制御。  
